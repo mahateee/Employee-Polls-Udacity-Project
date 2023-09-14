@@ -1,14 +1,26 @@
 import React from "react";
 import { useState } from "react";
-
-export default function PollCreation() {
+import { connect } from "react-redux";
+import { handleSaveQuestion } from "../actions/questions";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+function PollCreation(props) {
+  const { authedUser } = props;
   const [firstOption, setFirstOption] = useState("");
   const [secondOption, setSecondOption] = useState("");
-
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const handleSubmit = (e) => {
     e.preventDefault();
+    dispatch(
+      handleSaveQuestion({
+        optionOneText: firstOption,
+        optionTwoText: secondOption,
+        author: authedUser.id,
+      })
+    );
+    navigate("/Dashboard");
   };
-
   return (
     <section class="bg-gray-50 dark:bg-gray-900">
       <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -71,3 +83,10 @@ export default function PollCreation() {
     </section>
   );
 }
+function mapStateToProps({ authedUser }) {
+  return {
+    authedUser,
+  };
+}
+
+export default connect(mapStateToProps)(PollCreation);

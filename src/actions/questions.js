@@ -41,14 +41,11 @@ export function handleToggleTweet(info) {
       });
   };
 }
-
-export function handleSaveQuestion(optionOneText, optionTwoText, author) {
+export function handleSaveQuestion(info) {
   return (dispatch) => {
-    return saveQuestion({ optionOneText, optionTwoText, author }).then(
-      (question) => {
-        dispatch(addQuestion(question));
-        dispatch(addQuestionToUser(question));
-      }
-    );
+    return saveQuestion(info).then((info) => {
+      dispatch(addQuestion(info));
+      dispatch(addQuestionToUser(info));
+    });
   };
 }

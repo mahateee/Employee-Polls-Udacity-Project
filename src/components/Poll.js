@@ -3,20 +3,21 @@ import { connect } from "react-redux";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import Container from "./Container";
 import { handleToggleTweet } from "../actions/questions";
+import { useDispatch } from "react-redux";
 import Nav from "./Nav";
 function Poll(props) {
-  // TODO: Handle like Tweet
   const navigate = useNavigate();
-  const { dispatch, question, authedUser } = props;
+  const { question, authedUser } = props;
   console.log(question, authedUser);
+  const dispatch = useDispatch();
   const handleAddOptionOne = (e) => {
     e.preventDefault();
 
     dispatch(
       handleToggleTweet({
+        authedUser: authedUser.id,
         qid: question.id,
         answer: "optionOne",
-        authedUser: authedUser.id,
       })
     );
     navigate("/Dashboard");
@@ -26,9 +27,9 @@ function Poll(props) {
 
     dispatch(
       handleToggleTweet({
-        qid: question,
-        answer: "optionTwo",
         authedUser: authedUser.id,
+        qid: question.id,
+        answer: "optionTwo",
       })
     );
     navigate("/Dashboard");
@@ -66,9 +67,7 @@ function Poll(props) {
               <h3 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
                 <a href="#">Option One</a>
               </h3>
-              <span className="text-gray-500 dark:text-gray-400">
-                CEO & Web Developer
-              </span>
+
               <p className="mt-3 mb-4 font-light text-gray-500 dark:text-gray-400">
                 {props.question.optionOne.text}
               </p>
@@ -91,9 +90,7 @@ function Poll(props) {
               <h3 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
                 <a href="#">Option Two</a>
               </h3>
-              <span className="text-gray-500 dark:text-gray-400">
-                CEO & Web Developer
-              </span>
+
               <p className="mt-3 mb-4 font-light text-gray-500 dark:text-gray-400">
                 {props.question.optionTwo.text}
               </p>
@@ -117,20 +114,13 @@ function Poll(props) {
   );
 }
 const mapStateToProps = ({ authedUser, users, questions }) => {
-  try {
-    const question = Object.values(questions).find(
-      (question) => question.id === useParams().id
-    );
-    const isVotedOptionOne = question.optionOne.votes.includes(authedUser.id);
-    const isVotedOptionTwo = question.optionTwo.votes.includes(authedUser.id);
-    const isVoted = isVotedOptionOne || isVotedOptionTwo;
-    return { authedUser, users, questions, question, isVoted };
-  } catch (e) {
-    console.log("404");
-    // return <Navigate to="/404"/>;
-    // navigate("/404")
-    // throw new Error(`Question or user is not found.\n ${e}`);
-  }
+  const question = Object.values(questions).find(
+    (question) => question.id === useParams().id
+  );
+  const isVotedOptionOne = question.optionOne.votes.includes(authedUser.id);
+  const isVotedOptionTwo = question.optionTwo.votes.includes(authedUser.id);
+  const isVoted = isVotedOptionOne || isVotedOptionTwo;
+  return { authedUser, users, questions, question, isVoted };
 };
 
 export default connect(mapStateToProps)(Poll);

@@ -100,7 +100,8 @@ function Dashboard(props) {
   );
 }
 function mapStateToProps({ authedUser, users, questions }) {
-  const answeredIds = Object.keys(users[authedUser.id].answers);
+  const authedUserID = authedUser.id;
+  const answeredIds = Object.keys(users[authedUserID].answers);
   console.log(answeredIds);
   const answered = Object.values(questions)
     .filter((question) => answeredIds.includes(question.id))
