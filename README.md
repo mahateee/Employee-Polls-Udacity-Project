@@ -1,5 +1,5 @@
-#Udacity React Nanodegree
-##Project steps
+# Udacity React Nanodegree
+## Project steps
 - Project overview
 - Views and Components
 - Events
