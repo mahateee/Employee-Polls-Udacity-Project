@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import Container from "./Container";
-import { handleToggleTweet } from "../actions/questions";
+import { handleAddAnswer } from "../actions/questions";
 import { useDispatch } from "react-redux";
 import Nav from "./Nav";
 function Poll(props) {
@@ -10,11 +10,14 @@ function Poll(props) {
   const { question, authedUser } = props;
   console.log(question, authedUser);
   const dispatch = useDispatch();
+  if (!authedUser || !question) {
+    return <Navigate to="/404" />;
+  }
   const handleAddOptionOne = (e) => {
     e.preventDefault();
 
     dispatch(
-      handleToggleTweet({
+      handleAddAnswer({
         authedUser: authedUser.id,
         qid: question.id,
         answer: "optionOne",
@@ -26,7 +29,7 @@ function Poll(props) {
     e.preventDefault();
 
     dispatch(
-      handleToggleTweet({
+      handleAddAnswer({
         authedUser: authedUser.id,
         qid: question.id,
         answer: "optionTwo",
@@ -81,7 +84,10 @@ function Poll(props) {
                 </button>
               )}
               {props.isVoted && (
-                <p>voting results: {calcPercentage("optionOne", question)}</p>
+                <>
+                  <p>voting results: {calcPercentage("optionOne", question)}</p>
+                  <p>{question.optionOne.votes.length} votes</p>
+                </>
               )}
             </div>
           </div>
@@ -104,7 +110,10 @@ function Poll(props) {
                 </button>
               )}
               {props.isVoted && (
-                <p>voting results: {calcPercentage("optionTwo", question)}</p>
+                <>
+                  <p>voting results: {calcPercentage("optionTwo", question)}</p>
+                  <p>{question.optionTwo.votes.length} votes</p>
+                </>
               )}
             </div>
           </div>
@@ -114,13 +123,18 @@ function Poll(props) {
   );
 }
 const mapStateToProps = ({ authedUser, users, questions }) => {
-  const question = Object.values(questions).find(
-    (question) => question.id === useParams().id
-  );
-  const isVotedOptionOne = question.optionOne.votes.includes(authedUser.id);
-  const isVotedOptionTwo = question.optionTwo.votes.includes(authedUser.id);
-  const isVoted = isVotedOptionOne || isVotedOptionTwo;
-  return { authedUser, users, questions, question, isVoted };
+  try {
+    const question = Object.values(questions).find(
+      (question) => question.id === useParams().id
+    );
+    const isVotedOptionOne = question.optionOne.votes.includes(authedUser.id);
+    const isVotedOptionTwo = question.optionTwo.votes.includes(authedUser.id);
+    const isVoted = isVotedOptionOne || isVotedOptionTwo;
+    return { authedUser, users, questions, question, isVoted };
+  } catch (e) {
+    return <Navigate to="/404" />;
+    // throw new Error(`Question or user is not found.\n ${e}`);
+  }
 };
 
 export default connect(mapStateToProps)(Poll);

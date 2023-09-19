@@ -25,7 +25,7 @@ function addQuestion(question) {
     question,
   };
 }
-export function handleToggleTweet(info) {
+export function handleAddAnswer(info) {
   return (dispatch) => {
     saveQuestionAnswer(info)
       .then(() => {

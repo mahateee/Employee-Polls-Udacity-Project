@@ -4,14 +4,26 @@ import { connect } from "react-redux";
 import { handleSaveQuestion } from "../actions/questions";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import Nav from "./Nav";
 function PollCreation(props) {
   const { authedUser } = props;
   const [firstOption, setFirstOption] = useState("");
   const [secondOption, setSecondOption] = useState("");
+
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!firstOption || !secondOption) {
+      setSuccess(false);
+      setError(true);
+      return;
+    }
+
+    setSuccess(true);
+    setError(false);
     dispatch(
       handleSaveQuestion({
         optionOneText: firstOption,
@@ -19,11 +31,33 @@ function PollCreation(props) {
         author: authedUser.id,
       })
     );
-    navigate("/Dashboard");
+
+    setTimeout(() => {
+      navigate("/Dashboard");
+    }, 1000);
   };
   return (
     <section class="bg-gray-50 dark:bg-gray-900">
+      <Nav />
       <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+        {success && (
+          <h1
+            className={"Success"}
+            class={"font-light text-green-500"}
+            data-testid="success-header"
+          >
+            poll Submitted!
+          </h1>
+        )}
+        {error && (
+          <h1
+            className={"Error"}
+            class={"font-light text-red-500"}
+            data-testid="error-header"
+          >
+            Please enter a all option.
+          </h1>
+        )}
         <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div class="p-6 space-y-4 md:space-y-4 sm:p-8">
             <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
@@ -47,6 +81,7 @@ function PollCreation(props) {
                 <input
                   type="text"
                   name="option1"
+                  data-testid="firstOption"
                   id="option1"
                   value={firstOption}
                   onChange={(e) => setFirstOption(e.target.value)}
@@ -64,6 +99,7 @@ function PollCreation(props) {
                 </label>
                 <input
                   type="text"
+                  data-testid="secondOption"
                   value={secondOption}
                   onChange={(e) => setSecondOption(e.target.value)}
                   name="option2"
@@ -73,8 +109,11 @@ function PollCreation(props) {
                   required=""
                 />
               </div>
-              <button class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                Read more
+              <button
+                data-testid="submit-button"
+                class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                Submit
               </button>
             </form>
           </div>

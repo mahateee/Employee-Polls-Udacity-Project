@@ -59,6 +59,7 @@ function Login({ dispatch, loggedIn }) {
                   Your username
                 </label>
                 <input
+                  data-testid="username-input"
                   value={username}
                   onChange={handleUsername}
                   type="username"
@@ -77,6 +78,7 @@ function Login({ dispatch, loggedIn }) {
                   Password
                 </label>
                 <input
+                  data-testid="password-input"
                   type="password"
                   name="password"
                   id="password"

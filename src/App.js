@@ -15,6 +15,8 @@ import Dashboard from "./components/Dashboard";
 import Poll from "./components/Poll";
 import Leaderboard from "./components/Leaderboard";
 import PollCreation from "./components/PollCreation";
+import Error404 from "./components/Error404";
+
 function App(props) {
   useEffect(() => {
     props.dispatch(handleInitialData());
@@ -29,6 +31,7 @@ function App(props) {
           <Route path="/Dashboard/questions/:id" element={<Poll />} />
           <Route path="/Leaderboard" element={<Leaderboard />} />
           <Route path="/New" element={<PollCreation />} />
+          <Route path="/404" element={<Error404 />} />
 
           <Route path="*" element={<p>Path not resolved</p>} />
         </Routes>

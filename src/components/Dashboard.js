@@ -4,12 +4,15 @@ import Nav from "./Nav";
 import Container from "./Container";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 function Dashboard(props) {
   // console.log(props.answered);
+
   const [activeTab, setActiveTab] = useState("tab1");
   const handleTabSelect = (selectedTab) => {
     setActiveTab(selectedTab);
   };
+
   return (
     <div>
       <Nav />
@@ -100,22 +103,26 @@ function Dashboard(props) {
   );
 }
 function mapStateToProps({ authedUser, users, questions }) {
-  const authedUserID = authedUser.id;
-  const answeredIds = Object.keys(users[authedUserID].answers);
-  console.log(answeredIds);
-  const answered = Object.values(questions)
-    .filter((question) => answeredIds.includes(question.id))
-    .sort((a, b) => b.timestamp - a.timestamp);
-  const unanswered = Object.values(questions)
-    .filter((question) => !answeredIds.includes(question.id))
-    .sort((a, b) => b.timestamp - a.timestamp);
+  try {
+    const authedUserID = authedUser.id;
+    const answeredIds = Object.keys(users[authedUserID].answers);
+    console.log(answeredIds);
+    const answered = Object.values(questions)
+      .filter((question) => answeredIds.includes(question.id))
+      .sort((a, b) => b.timestamp - a.timestamp);
+    const unanswered = Object.values(questions)
+      .filter((question) => !answeredIds.includes(question.id))
+      .sort((a, b) => b.timestamp - a.timestamp);
 
-  return {
-    authedUser,
-    users,
-    questions,
-    answered,
-    unanswered,
-  };
+    return {
+      authedUser,
+      users,
+      questions,
+      answered,
+      unanswered,
+    };
+  } catch (e) {
+    return <Navigate to="/404" />;
+  }
 }
 export default connect(mapStateToProps)(Dashboard);
