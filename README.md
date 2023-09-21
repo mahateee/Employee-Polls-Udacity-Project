@@ -1,4 +1,20 @@
-# Getting Started with Create React App
+# Udacity React Nanodegree
+## Project steps
+- Project overview
+- Views and Components
+- Events
+- The Store
+- Actions
+- Middleware
+- Handling data
+- Dashboard
+- Leaderboard
+- Handling add questions
+- Handling add answer to questions
+- React Route
+- Testing with Jest
+  
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
