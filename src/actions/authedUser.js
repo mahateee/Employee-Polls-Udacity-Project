@@ -1,11 +1,11 @@
 export const SET_AUTHED_USER = "SET_AUTHED_USER ";
-
-export function setAuthedUser(id) {
+export function setAuthedUser(authedUser) {
   return {
     type: SET_AUTHED_USER,
-    id,
+    authedUser,
   };
 }
+
 export function handleLogin(username, password) {
   return (dispatch, getState) => {
     const { users } = getState();

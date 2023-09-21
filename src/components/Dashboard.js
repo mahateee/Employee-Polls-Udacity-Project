@@ -12,12 +12,25 @@ function Dashboard(props) {
   const handleTabSelect = (selectedTab) => {
     setActiveTab(selectedTab);
   };
+  const questionsarr = Object.values(props.questions).sort(
+    (a, b) => b.timestamp - a.timestamp
+  );
+
+  const unanswered = questionsarr.filter(
+    (question) =>
+      !question.optionOne.votes.includes(props.authedUser.id) &&
+      !question.optionTwo.votes.includes(props.authedUser.id)
+  );
+  const answered = questionsarr.filter(
+    (question) =>
+      question.optionOne.votes.includes(props.authedUser.id) ||
+      question.optionTwo.votes.includes(props.authedUser.id)
+  );
 
   return (
-    <div>
-      <Nav />
+    <>
       <Container>
-        <div className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+        <div className="w-full mt-12  bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
           <ul
             className="flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 rounded-t-lg bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:bg-gray-800"
             id="defaultTab"
@@ -33,7 +46,11 @@ function Dashboard(props) {
                 aria-controls="about"
                 aria-selected="true"
                 onClick={() => handleTabSelect("tab1")}
-                class="inline-block p-4 text-blue-600 rounded-tl-lg hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-blue-500"
+                class={`inline-block p-4 ${
+                  activeTab === "tab1"
+                    ? "text-blue-600 dark:text-blue-500"
+                    : "text-gray-600 dark:text-gray-300"
+                } rounded-tl-lg hover:bg-gray-100 dark:hover:bg-gray-700 `}
               >
                 Answered Questions
               </button>
@@ -47,7 +64,11 @@ function Dashboard(props) {
                 aria-controls="services"
                 aria-selected="false"
                 onClick={() => handleTabSelect("tab2")}
-                class="inline-block p-4 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-300"
+                class={`inline-block p-4 ${
+                  activeTab === "tab2"
+                    ? "text-blue-600 dark:text-blue-500"
+                    : "text-gray-600 dark:text-gray-300"
+                } rounded-tl-lg hover:bg-gray-100 dark:hover:bg-gray-700 `}
               >
                 New Questions
               </button>
@@ -55,12 +76,19 @@ function Dashboard(props) {
           </ul>
           {activeTab === "tab1" ? (
             <div className="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0">
-              {props.answered.map((question) => {
+              {answered.map((question) => {
                 return (
-                  <div className="p-8">
+                  <div className="p-6" key={question.id}>
                     <h3 className="mb-2 text-xl font-bold dark:text-white">
                       {question.author}
                     </h3>
+                    <div className="flex justify-center">
+                      <img
+                        class="rounded-full w-1/4 "
+                        src={props.users[question.author].avatarURL}
+                        alt={question.author}
+                      />
+                    </div>
                     <p className="text-gray-500 dark:text-gray-400">
                       {new Date(question.timestamp).toDateString()}
                     </p>
@@ -77,12 +105,19 @@ function Dashboard(props) {
           ) : null}
           {activeTab === "tab2" ? (
             <div className="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0">
-              {props.unanswered.map((question) => {
+              {unanswered.map((question) => {
                 return (
                   <div className="p-8">
                     <h3 className="mb-2 text-xl font-bold dark:text-white">
                       {question.author}
                     </h3>
+                    <div className="flex justify-center">
+                      <img
+                        class="rounded-full w-1/4 "
+                        src={props.users[question.author].avatarURL}
+                        alt={question.author}
+                      />
+                    </div>
                     <p className="text-gray-500 dark:text-gray-400">
                       {new Date(question.timestamp).toDateString()}
                     </p>
@@ -99,30 +134,14 @@ function Dashboard(props) {
           ) : null}
         </div>
       </Container>
-    </div>
+    </>
   );
 }
 function mapStateToProps({ authedUser, users, questions }) {
-  try {
-    const authedUserID = authedUser.id;
-    const answeredIds = Object.keys(users[authedUserID].answers);
-    console.log(answeredIds);
-    const answered = Object.values(questions)
-      .filter((question) => answeredIds.includes(question.id))
-      .sort((a, b) => b.timestamp - a.timestamp);
-    const unanswered = Object.values(questions)
-      .filter((question) => !answeredIds.includes(question.id))
-      .sort((a, b) => b.timestamp - a.timestamp);
-
-    return {
-      authedUser,
-      users,
-      questions,
-      answered,
-      unanswered,
-    };
-  } catch (e) {
-    return <Navigate to="/404" />;
-  }
+  return {
+    authedUser,
+    users,
+    questions,
+  };
 }
 export default connect(mapStateToProps)(Dashboard);

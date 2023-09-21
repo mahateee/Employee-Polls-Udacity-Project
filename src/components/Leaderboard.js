@@ -4,11 +4,11 @@ import Container from "./Container";
 import Nav from "./Nav";
 function Leaderboard({ users }) {
   console.log(users);
+  const userArr = Object.values(users);
   return (
     <div>
-      <Nav />
       <Container>
-        <div class="relative overflow-x-auto">
+        <div class="relative flex flex-col m-12 items-center overflow-x-auto">
           <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
@@ -24,7 +24,7 @@ function Leaderboard({ users }) {
               </tr>
             </thead>
             <tbody>
-              {users.map((u) => {
+              {userArr.map((u) => {
                 return (
                   <tr
                     key={u.id}
@@ -48,7 +48,9 @@ function Leaderboard({ users }) {
     </div>
   );
 }
-const mapStateToProps = ({ users }) => ({
-  users: Object.values(users),
-});
+function mapStateToProps({ users }) {
+  return {
+    users,
+  };
+}
 export default connect(mapStateToProps)(Leaderboard);

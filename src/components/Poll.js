@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import Container from "./Container";
 import { handleAddAnswer } from "../actions/questions";
 import { useDispatch } from "react-redux";
-import Nav from "./Nav";
+
 function Poll(props) {
   const navigate = useNavigate();
-  const { question, authedUser } = props;
+  const { question, authedUser, users } = props;
   console.log(question, authedUser);
   const dispatch = useDispatch();
   if (!authedUser || !question) {
@@ -16,25 +16,13 @@ function Poll(props) {
   const handleAddOptionOne = (e) => {
     e.preventDefault();
 
-    dispatch(
-      handleAddAnswer({
-        authedUser: authedUser.id,
-        qid: question.id,
-        answer: "optionOne",
-      })
-    );
+    dispatch(handleAddAnswer(question.id, "optionOne"));
     navigate("/Dashboard");
   };
   const handleAddOptionTwo = (e) => {
     e.preventDefault();
 
-    dispatch(
-      handleAddAnswer({
-        authedUser: authedUser.id,
-        qid: question.id,
-        answer: "optionTwo",
-      })
-    );
+    dispatch(handleAddAnswer(question.id, "optionTwo"));
     navigate("/Dashboard");
   };
   const calcPercentage = (option, question) => {
@@ -53,11 +41,17 @@ function Poll(props) {
   };
   return (
     <div>
-      <Nav />
       <Container>
-        <div className="mx-auto max-w-screen-sm text-center mb-8 lg:mb-16">
+        <div className="mx-auto max-w-screen-sm mt-12 text-center mb-8 lg:mb-16">
           <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
             Poll by {question.author}
+            <div className="flex justify-center">
+              <img
+                class="rounded-full w-1/5 p-5"
+                src={users[question.author].avatarURL}
+                alt={question.author}
+              />
+            </div>
           </h2>
           <p className="font-light text-gray-500 lg:mb-16 sm:text-xl dark:text-gray-400">
             Would you rather?
@@ -65,10 +59,10 @@ function Poll(props) {
         </div>
 
         <div className="grid gap-8 mb-6 lg:mb-16 md:grid-cols-2">
-          <div className="items-center bg-gray-50 rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700">
+          <div className="items-center justify-center bg-gray-50 rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700">
             <div className="p-5">
               <h3 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-                <a href="#">Option One</a>
+                Option One
               </h3>
 
               <p className="mt-3 mb-4 font-light text-gray-500 dark:text-gray-400">
@@ -85,16 +79,20 @@ function Poll(props) {
               )}
               {props.isVoted && (
                 <>
-                  <p>voting results: {calcPercentage("optionOne", question)}</p>
-                  <p>{question.optionOne.votes.length} votes</p>
+                  <p className="text-gray-500 dark:text-gray-400">
+                    voting results: {calcPercentage("optionOne", question)}
+                  </p>
+                  <p className="text-gray-500 dark:text-gray-400">
+                    {question.optionOne.votes.length} votes
+                  </p>
                 </>
               )}
             </div>
           </div>
-          <div className="items-center bg-gray-50 rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700">
+          <div className="items-center justify-center bg-gray-50 rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700">
             <div className="p-5">
               <h3 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-                <a href="#">Option Two</a>
+                Option Two
               </h3>
 
               <p className="mt-3 mb-4 font-light text-gray-500 dark:text-gray-400">
@@ -111,8 +109,12 @@ function Poll(props) {
               )}
               {props.isVoted && (
                 <>
-                  <p>voting results: {calcPercentage("optionTwo", question)}</p>
-                  <p>{question.optionTwo.votes.length} votes</p>
+                  <p className="text-gray-500 dark:text-gray-400">
+                    voting results: {calcPercentage("optionTwo", question)}
+                  </p>
+                  <p className="text-gray-500 dark:text-gray-400">
+                    {question.optionTwo.votes.length} votes
+                  </p>
                 </>
               )}
             </div>

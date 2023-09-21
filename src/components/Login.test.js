@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import * as React from "react";
 import Login from "./Login";
 import { Provider } from "react-redux";
@@ -37,5 +37,23 @@ describe("Login", () => {
 
     var submitButton = screen.getByText("Sign in");
     expect(submitButton).toBeInTheDocument();
+  });
+  it("should display all elements", () => {
+    // store.dispatch(setAuthedUser("sarahedo"));
+
+    const view = render(
+      <Provider store={store}>
+        <BrowserRouter>
+          <Login />
+        </BrowserRouter>
+      </Provider>
+    );
+    var username = screen.getByTestId("username-input");
+    var password = screen.getByTestId("password-input");
+
+    fireEvent.change(username, { target: { value: "sarahedo" } });
+    fireEvent.change(password, { target: { value: "password123" } });
+    expect(username.value).toBe("sarahedo");
+    expect(password.value).toBe("password123");
   });
 });

@@ -54,7 +54,7 @@ describe("PollCreation", () => {
   });
   it("will display a success message if the firstOption & secondOption are provided.", () => {
     store.dispatch(setAuthedUser({ id: "sarahedo" }));
-    store.dispatch(setAuthedUser({ id: "sarahedo" }));
+    // store.dispatch(setAuthedUser({ id: "sarahedo" }));
     store.dispatch(handleInitialData());
     const view = render(
       <Provider store={store}>
@@ -63,12 +63,12 @@ describe("PollCreation", () => {
         </BrowserRouter>
       </Provider>
     );
-    const inputOne = screen.getByTestId("firstOption");
-    const inputTwo = screen.getByTestId("secondOption");
+    const firstOption = screen.getByTestId("firstOption");
+    const secondOption = screen.getByTestId("secondOption");
     const submitButton = screen.getByTestId("submit-button");
 
-    fireEvent.change(inputOne, { target: { value: "first value" } });
-    fireEvent.change(inputTwo, { target: { value: "second value" } });
+    fireEvent.change(firstOption, { target: { value: "first value" } });
+    fireEvent.change(secondOption, { target: { value: "second value" } });
     fireEvent.click(submitButton);
     expect(screen.getByTestId("success-header")).toBeInTheDocument();
     expect(screen.queryByTestId("error-header")).not.toBeInTheDocument();

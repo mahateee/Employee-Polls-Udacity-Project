@@ -22,20 +22,23 @@ describe("_saveQuestionAnswer", () => {
 });
 describe("_saveQuestion", () => {
   it("should return true for correct parameters", async () => {
-    const response = await _saveQuestion({
-      optionOneText: "first",
-      optionTwoText: "second",
-      author: "mtsamis",
+    const author = "author";
+    const optionOneText = "option one";
+    const optionTwoText = "option two";
+    const question = await _saveQuestion({
+      author,
+      optionOneText,
+      optionTwoText,
     });
 
-    expect(response).toBeTruthy();
+    expect(question).toBeDefined();
   });
 
   it("should return error for Invalid parameters", async () => {
     const response = await _saveQuestion({
       optionOneText: "first",
       optionTwoText: "second",
-      author: null,
+      author: undefined,
     }).catch((e) => e);
 
     expect(response).toBe(

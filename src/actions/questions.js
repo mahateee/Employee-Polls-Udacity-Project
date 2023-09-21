@@ -10,7 +10,7 @@ export function receiveQuestions(questions) {
     questions,
   };
 }
-export function addAnswerToQuestion({ authedUser, qid, answer }) {
+export function addAnswerToQuestion(authedUser, qid, answer) {
   return {
     type: ADD_ANSWER_TO_QUESTION,
     authedUser,
@@ -25,20 +25,30 @@ function addQuestion(question) {
     question,
   };
 }
-export function handleAddAnswer(info) {
-  return (dispatch) => {
-    saveQuestionAnswer(info)
-      .then(() => {
-        dispatch(addAnswerToQuestion(info));
-        dispatch(addAnswerToUser(info));
-      })
-      .catch((e) => {
-        console.warn("Error in handleToggleTweet: ", e);
-        dispatch(addAnswerToQuestion(info));
-        dispatch(addAnswerToUser(info));
+// export function handleAddAnswer(info) {
+//   return (dispatch) => {
+//     saveQuestionAnswer(info)
+//       .then(() => {
+//         dispatch(addAnswerToQuestion(info));
+//         dispatch(addAnswerToUser(info));
+//       })
+//       .catch((e) => {
+//         console.warn("Error in handleToggleTweet: ", e);
+//         dispatch(addAnswerToQuestion(info));
+//         dispatch(addAnswerToUser(info));
 
-        alert("There was an error liking the tweet. Try again.");
-      });
+//         alert("There was an error liking the tweet. Try again.");
+//       });
+//   };
+// }
+
+export function handleAddAnswer(questionId, answer) {
+  return (dispatch, getState) => {
+    const { authedUser } = getState();
+    return saveQuestionAnswer(authedUser.id, questionId, answer).then(() => {
+      dispatch(addAnswerToQuestion(authedUser.id, questionId, answer));
+      dispatch(addAnswerToUser(authedUser.id, questionId, answer));
+    });
   };
 }
 export function handleSaveQuestion(info) {

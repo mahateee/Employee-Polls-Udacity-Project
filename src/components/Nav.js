@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { setAuthedUser } from "../actions/authedUser";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-function Nav({ users, authedUser }) {
+function Nav(authedUser) {
   // console.log(users);
   const navigate = useNavigate();
   // console.log(authedUser);
@@ -87,7 +87,7 @@ function Nav({ users, authedUser }) {
 }
 function mapStateToProps({ users, authedUser }) {
   return {
-    authedUser,
+    // authedUser,
     users,
   };
 }

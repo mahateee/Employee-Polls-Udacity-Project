@@ -16,6 +16,7 @@ import Poll from "./components/Poll";
 import Leaderboard from "./components/Leaderboard";
 import PollCreation from "./components/PollCreation";
 import Error404 from "./components/Error404";
+import Nav from "./components/Nav";
 
 function App(props) {
   useEffect(() => {
@@ -25,6 +26,7 @@ function App(props) {
   return (
     <Router>
       <div className="App">
+        {/* <Nav authedUser={authedUser} /> */}
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/Dashboard" element={<Dashboard />} />
