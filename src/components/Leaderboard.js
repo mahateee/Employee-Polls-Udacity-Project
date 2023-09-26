@@ -1,10 +1,13 @@
-import React from "react";
-import { connect } from "react-redux";
+import React, { useEffect } from "react";
+import { connect, useDispatch, useSelector } from "react-redux";
 import Container from "./Container";
 import Nav from "./Nav";
-function Leaderboard({ users }) {
-  console.log(users);
-  const userArr = Object.values(users);
+import { receiveUsers } from "../actions/users";
+function Leaderboard() {
+  const dispatch = useDispatch();
+  const users = useSelector((state) => state.users);
+  // dispatch(receiveUsers(users));
+  let userArr = Object.values(users);
   return (
     <div>
       <Container>
@@ -24,22 +27,52 @@ function Leaderboard({ users }) {
               </tr>
             </thead>
             <tbody>
-              {userArr.map((u) => {
-                return (
-                  <tr
-                    key={u.id}
-                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                  >
-                    <th
-                      scope="row"
-                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              {/* {userArr &&
+                userArr.map((u) => {
+                  return (
+                    <tr
+                      key={u.id}
+                      class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                     >
-                      {u.name}
-                    </th>
-                    <td class="px-6 py-4">{Object.keys(u.answers).length}</td>
-                    <td class="px-6 py-4">{u.questions.length}</td>
-                  </tr>
-                );
+                      <th
+                        scope="row"
+                        class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      >
+                        {u.name}
+                      </th>
+                      <td class="px-6 py-4">
+                        {u.answers ? Object.keys(u.answers).length : 0}
+                      </td>
+                      <td class="px-6 py-4">
+                        {u.questions ? u.questions.length : 0}
+                      </td>
+                    </tr>
+                  );
+                })} */}
+              {userArr.map((u) => {
+                if (u.name && u.answers && u.questions) {
+                  return (
+                    <tr
+                      key={u.id}
+                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                    >
+                      <th
+                        scope="row"
+                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      >
+                        {u.name}
+                      </th>
+                      <td className="px-6 py-4">
+                        {u.answers ? Object.keys(u.answers).length : 0}
+                      </td>
+                      <td className="px-6 py-4">
+                        {u.questions ? u.questions.length : 0}
+                      </td>
+                    </tr>
+                  );
+                } else {
+                  return null; // Skip rendering incomplete entries
+                }
               })}
             </tbody>
           </table>
@@ -48,9 +81,5 @@ function Leaderboard({ users }) {
     </div>
   );
 }
-function mapStateToProps({ users }) {
-  return {
-    users,
-  };
-}
-export default connect(mapStateToProps)(Leaderboard);
+
+export default Leaderboard;

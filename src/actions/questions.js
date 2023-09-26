@@ -25,22 +25,6 @@ function addQuestion(question) {
     question,
   };
 }
-// export function handleAddAnswer(info) {
-//   return (dispatch) => {
-//     saveQuestionAnswer(info)
-//       .then(() => {
-//         dispatch(addAnswerToQuestion(info));
-//         dispatch(addAnswerToUser(info));
-//       })
-//       .catch((e) => {
-//         console.warn("Error in handleToggleTweet: ", e);
-//         dispatch(addAnswerToQuestion(info));
-//         dispatch(addAnswerToUser(info));
-
-//         alert("There was an error liking the tweet. Try again.");
-//       });
-//   };
-// }
 
 export function handleAddAnswer(questionId, answer) {
   return (dispatch, getState) => {

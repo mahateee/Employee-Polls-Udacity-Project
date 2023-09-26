@@ -12,15 +12,13 @@ export default function users(state = {}, action) {
         ...action.users,
       };
     case ADD_ANSWER_TO_USER:
-      const { authedUser, qid, answer } = action;
-
       return {
         ...state,
-        [authedUser]: {
-          ...state[authedUser],
+        [action.authedUser]: {
+          ...state[action.authedUser],
           answers: {
-            ...state[authedUser]?.answers,
-            [qid]: answer,
+            ...state[action.authedUser].answers,
+            [action.qid]: action.answer,
           },
         },
       };

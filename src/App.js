@@ -1,11 +1,12 @@
 import logo from "./logo.svg";
 import "./App.css";
 import React, { useEffect } from "react";
-import { connect } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { handleInitialData } from "./actions/shared";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import Login from "./components/Login";
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Route,
   Routes,
   Switch,
@@ -18,22 +19,60 @@ import PollCreation from "./components/PollCreation";
 import Error404 from "./components/Error404";
 import Nav from "./components/Nav";
 
-function App(props) {
+function App() {
+  // useEffect(() => {
+  //   props.dispatch(handleInitialData());
+  // }, [props.dispatch]);
+  const dispatch = useDispatch();
   useEffect(() => {
-    props.dispatch(handleInitialData());
-  }, []);
-  const { authedUser } = props;
+    dispatch(handleInitialData());
+  }, [dispatch]);
+  // const { authedUser } = props;
   return (
     <Router>
       <div className="App">
-        {/* <Nav authedUser={authedUser} /> */}
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route path="/Dashboard" element={<Dashboard />} />
-          <Route path="/Dashboard/questions/:id" element={<Poll />} />
-          <Route path="/Leaderboard" element={<Leaderboard />} />
-          <Route path="/New" element={<PollCreation />} />
-          <Route path="/404" element={<Error404 />} />
+          <Route
+            path="/Dashboard"
+            element={
+              <RequireAuth>
+                <Dashboard />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/Dashboard/questions/:id"
+            element={
+              <RequireAuth>
+                <Poll />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/Leaderboard"
+            element={
+              <RequireAuth>
+                <Leaderboard />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/New"
+            element={
+              <RequireAuth>
+                <PollCreation />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/404"
+            element={
+              <RequireAuth>
+                <Error404 />
+              </RequireAuth>
+            }
+          />
 
           <Route path="*" element={<p>Path not resolved</p>} />
         </Routes>
@@ -41,9 +80,29 @@ function App(props) {
     </Router>
   );
 }
-function mapStateToProps({ authedUser }) {
-  return {
-    authedUser,
-  };
+function RequireAuth({ props, children, loggedIn }) {
+  // const authed = useSelector((state) => state.authedUser);
+  // const location = useLocation();
+  // const navigate = useNavigate();
+  // return authed === null ? (
+  //   <Navigate to="/" replace state={{ path: location.pathname }} />
+  // ) : (
+  //   // navigate("/")
+  //   children
+  // );
+  const authed = useSelector((state) => state.authedUser);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (authed === null) {
+      navigate("/", { replace: true, state: { path: location.pathname } });
+    }
+  }, [authed, navigate, location]);
+
+  return authed === null ? null : children;
 }
+const mapStateToProps = ({ authedUser }) => ({
+  loggedIn: !!authedUser,
+});
 export default connect(mapStateToProps)(App);

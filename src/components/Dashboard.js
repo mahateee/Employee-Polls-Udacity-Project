@@ -52,7 +52,7 @@ function Dashboard(props) {
                     : "text-gray-600 dark:text-gray-300"
                 } rounded-tl-lg hover:bg-gray-100 dark:hover:bg-gray-700 `}
               >
-                Answered Questions
+                New Questions
               </button>
             </li>
             <li className="mr-2">
@@ -70,13 +70,13 @@ function Dashboard(props) {
                     : "text-gray-600 dark:text-gray-300"
                 } rounded-tl-lg hover:bg-gray-100 dark:hover:bg-gray-700 `}
               >
-                New Questions
+                Answered Questions
               </button>
             </li>
           </ul>
           {activeTab === "tab1" ? (
             <div className="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0">
-              {answered.map((question) => {
+              {unanswered.map((question) => {
                 return (
                   <div className="p-6" key={question.id}>
                     <h3 className="mb-2 text-xl font-bold dark:text-white">
@@ -105,7 +105,7 @@ function Dashboard(props) {
           ) : null}
           {activeTab === "tab2" ? (
             <div className="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0">
-              {unanswered.map((question) => {
+              {answered.map((question) => {
                 return (
                   <div className="p-8">
                     <h3 className="mb-2 text-xl font-bold dark:text-white">

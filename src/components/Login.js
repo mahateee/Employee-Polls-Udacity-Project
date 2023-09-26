@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { handleLogin } from "../actions/authedUser";
 import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +8,9 @@ function Login({ dispatch, loggedIn }) {
   const [username, setUsername] = useState("sarahedo");
   const [password, setPassword] = useState("password123");
   console.log(loggedIn);
-
+  if (loggedIn) {
+    return navigate("/Dashboard");
+  }
   const handleUsername = (e) => {
     const value = e.target.value;
     setUsername(value);
@@ -18,29 +20,16 @@ function Login({ dispatch, loggedIn }) {
     const value = e.target.value;
     setPassword(value);
   };
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(handleLogin(username, password));
+    await dispatch(handleLogin(username, password));
     setUsername("");
     setPassword("");
-    if (loggedIn) {
-      navigate("/Dashboard");
-    }
   };
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <a
-          href="#"
-          className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
-        >
-          <img
-            className="w-8 h-8 mr-2"
-            src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
-            alt="logo"
-          />
-          Flowbite
-        </a>
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
@@ -104,8 +93,10 @@ function Login({ dispatch, loggedIn }) {
   );
 }
 
-const mapStateToProps = ({ authedUser }) => ({
-  loggedIn: !!authedUser,
-});
+function mapStateToProps({ authedUser }) {
+  return {
+    loggedIn: authedUser !== null,
+  };
+}
 
 export default connect(mapStateToProps)(Login);

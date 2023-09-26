@@ -22,7 +22,7 @@ describe("_saveQuestionAnswer", () => {
 });
 describe("_saveQuestion", () => {
   it("should return true for correct parameters", async () => {
-    const author = "author";
+    const author = "sarahedo";
     const optionOneText = "option one";
     const optionTwoText = "option two";
     const question = await _saveQuestion({

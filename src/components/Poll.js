@@ -7,10 +7,13 @@ import { useDispatch } from "react-redux";
 
 function Poll(props) {
   const navigate = useNavigate();
-  const { question, authedUser, users } = props;
-  console.log(question, authedUser);
   const dispatch = useDispatch();
-  if (!authedUser || !question) {
+  const { id } = useParams();
+  const { authedUser, questions, users } = props;
+  const question = questions[id];
+  const author = question ? users[question.author] : null;
+
+  if (!authedUser || !question || !author) {
     return <Navigate to="/404" />;
   }
   const handleAddOptionOne = (e) => {
@@ -25,6 +28,9 @@ function Poll(props) {
     dispatch(handleAddAnswer(question.id, "optionTwo"));
     navigate("/Dashboard");
   };
+  const isVotedOptionOne = question.optionOne.votes.includes(authedUser.id);
+  const isVotedOptionTwo = question.optionTwo.votes.includes(authedUser.id);
+  const isVoted = isVotedOptionOne || isVotedOptionTwo;
   const calcPercentage = (option, question) => {
     const optionOneVote = question.optionOne.votes.length;
     const optionTwoVote = question.optionTwo.votes.length;
@@ -66,9 +72,9 @@ function Poll(props) {
               </h3>
 
               <p className="mt-3 mb-4 font-light text-gray-500 dark:text-gray-400">
-                {props.question.optionOne.text}
+                {question.optionOne.text}
               </p>
-              {!props.isVoted && (
+              {!isVoted && (
                 <button
                   onClick={handleAddOptionOne}
                   type="button"
@@ -77,7 +83,7 @@ function Poll(props) {
                   Click
                 </button>
               )}
-              {props.isVoted && (
+              {isVoted && (
                 <>
                   <p className="text-gray-500 dark:text-gray-400">
                     voting results: {calcPercentage("optionOne", question)}
@@ -96,9 +102,9 @@ function Poll(props) {
               </h3>
 
               <p className="mt-3 mb-4 font-light text-gray-500 dark:text-gray-400">
-                {props.question.optionTwo.text}
+                {question.optionTwo.text}
               </p>
-              {!props.isVoted && (
+              {!isVoted && (
                 <button
                   onClick={handleAddOptionTwo}
                   type="button"
@@ -107,7 +113,7 @@ function Poll(props) {
                   Click
                 </button>
               )}
-              {props.isVoted && (
+              {isVoted && (
                 <>
                   <p className="text-gray-500 dark:text-gray-400">
                     voting results: {calcPercentage("optionTwo", question)}
@@ -124,19 +130,29 @@ function Poll(props) {
     </div>
   );
 }
-const mapStateToProps = ({ authedUser, users, questions }) => {
-  try {
-    const question = Object.values(questions).find(
-      (question) => question.id === useParams().id
-    );
-    const isVotedOptionOne = question.optionOne.votes.includes(authedUser.id);
-    const isVotedOptionTwo = question.optionTwo.votes.includes(authedUser.id);
-    const isVoted = isVotedOptionOne || isVotedOptionTwo;
-    return { authedUser, users, questions, question, isVoted };
-  } catch (e) {
-    return <Navigate to="/404" />;
-    // throw new Error(`Question or user is not found.\n ${e}`);
-  }
-};
+// const mapStateToProps = ({ authedUser, users, questions }) => {
+//   try {
+//     const question = Object.values(questions).find(
+//       (question) => question.id === useParams().id
+//     );
+//     const author = Object.values(users).find(
+//       (user) => user.id === question.author
+//     );
+//     const isVotedOptionOne = question.optionOne.votes.includes(authedUser.id);
+//     const isVotedOptionTwo = question.optionTwo.votes.includes(authedUser.id);
+//     const isVoted = isVotedOptionOne || isVotedOptionTwo;
+//     return { authedUser, users, questions, question, isVoted, author };
+//   } catch (e) {
+//     return <Navigate to="/404" />;
+//     // throw new Error(`Question or user is not found.\n ${e}`);
+//   }
+// };
+function mapStateToProps({ authedUser, questions, users }) {
+  return {
+    authedUser,
+    questions,
+    users,
+  };
+}
 
 export default connect(mapStateToProps)(Poll);
