@@ -26,18 +26,32 @@ The application will open in your browser at http://localhost:3000. You can view
 ## Project Screenshot
 ![image](https://github.com/mahateee/Employee-Polls-Udacity-Project/assets/76887619/8191c24a-be3c-4bb5-9758-75ca0e4beca8)
 *login Page*
+
+
 ![image](https://github.com/mahateee/Employee-Polls-Udacity-Project/assets/76887619/d05d7d76-679d-4ea0-9a34-c31ace5b3a2d)
 *Dashboard page: The unanswered questions are displayed by default.*
+
+
 ![image](https://github.com/mahateee/Employee-Polls-Udacity-Project/assets/76887619/2cb960f2-ba3a-42a4-872e-b148759a4dff)
-*Dashboard page: The answered questions *
+*Dashboard page: The answered questions*
+
+
 ![image](https://github.com/mahateee/Employee-Polls-Udacity-Project/assets/76887619/56a97efc-b3be-4900-9693-8b38b64e43f8)
-*Poll Question *
+*Poll Question*
+
+
 ![image](https://github.com/mahateee/Employee-Polls-Udacity-Project/assets/76887619/b8b8978f-68a0-4814-983e-d5c132241e91)
 *Poll answered*
+
+
 ![image](https://github.com/mahateee/Employee-Polls-Udacity-Project/assets/76887619/f30e872a-df4f-4a46-a9c3-7eaf101c4930)
 *Leaderboard page*
+
+
 ![image](https://github.com/mahateee/Employee-Polls-Udacity-Project/assets/76887619/272e86f3-0414-4939-b1b0-283051304c2b)
 *Poll Creation page*
+
+
 ## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
