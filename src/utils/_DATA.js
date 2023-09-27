@@ -189,6 +189,40 @@ export function _saveQuestion(question) {
   });
 }
 
+// export function _saveQuestionAnswer({ authedUser, qid, answer }) {
+//   return new Promise((resolve, reject) => {
+//     if (!authedUser || !qid || !answer) {
+//       reject("Please provide authedUser, qid, and answer");
+//     }
+
+//     setTimeout(() => {
+//       users = {
+//         ...users,
+//         [authedUser]: {
+//           ...users[authedUser],
+//           answers: {
+//             ...users[authedUser].answers,
+//             [qid]: answer,
+//           },
+//         },
+//       };
+
+//       questions = {
+//         ...questions,
+//         [qid]: {
+//           ...questions[qid],
+//           [answer]: {
+//             ...questions[qid][answer],
+//             votes: questions[qid][answer].votes.concat([authedUser]),
+//           },
+//         },
+//       };
+
+//       resolve(true);
+//     }, 500);
+//   });
+// }
+
 export function _saveQuestionAnswer({ authedUser, qid, answer }) {
   return new Promise((resolve, reject) => {
     if (!authedUser || !qid || !answer) {
@@ -196,29 +230,38 @@ export function _saveQuestionAnswer({ authedUser, qid, answer }) {
     }
 
     setTimeout(() => {
-      users = {
-        ...users,
-        [authedUser]: {
-          ...users[authedUser],
-          answers: {
-            ...users[authedUser].answers,
-            [qid]: answer,
+      if (
+        questions &&
+        questions[qid] &&
+        questions[qid][answer] &&
+        questions[qid][answer].votes
+      ) {
+        users = {
+          ...users,
+          [authedUser]: {
+            ...users[authedUser],
+            answers: {
+              ...users[authedUser].answers,
+              [qid]: answer,
+            },
           },
-        },
-      };
+        };
 
-      questions = {
-        ...questions,
-        [qid]: {
-          ...questions[qid],
-          [answer]: {
-            ...questions[qid][answer],
-            votes: questions[qid][answer].votes.concat([authedUser]),
+        questions = {
+          ...questions,
+          [qid]: {
+            ...questions[qid],
+            [answer]: {
+              ...questions[qid][answer],
+              votes: questions[qid][answer].votes.concat([authedUser]),
+            },
           },
-        },
-      };
+        };
 
-      resolve(true);
+        resolve(true);
+      } else {
+        reject("Invalid question or answer");
+      }
     }, 500);
   });
 }

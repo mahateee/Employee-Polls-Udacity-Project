@@ -22,16 +22,20 @@ describe("_saveQuestionAnswer", () => {
 });
 describe("_saveQuestion", () => {
   it("should return true for correct parameters", async () => {
-    const author = "sarahedo";
-    const optionOneText = "option one";
-    const optionTwoText = "option two";
-    const question = await _saveQuestion({
-      author,
-      optionOneText,
-      optionTwoText,
-    });
+    const question = {
+      optionOneText: "Option One",
+      optionTwoText: "Option Two",
+      author: "John Doe",
+    };
+    const result = await _saveQuestion(question);
 
-    expect(question).toBeDefined();
+    expect(result).toEqual({
+      author: "John Doe",
+      id: expect.any(String),
+      optionOne: { text: "Option One", votes: [] },
+      optionTwo: { text: "Option Two", votes: [] },
+      timestamp: expect.any(Number),
+    });
   });
 
   it("should return error for Invalid parameters", async () => {
