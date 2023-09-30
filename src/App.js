@@ -5,29 +5,17 @@ import { connect, useDispatch, useSelector } from "react-redux";
 import { handleInitialData } from "./actions/shared";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import Login from "./components/Login";
-import {
-  HashRouter as Router,
-  Route,
-  Routes,
-  Switch,
-  Redirect,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
 import Poll from "./components/Poll";
 import Leaderboard from "./components/Leaderboard";
 import PollCreation from "./components/PollCreation";
 import Error404 from "./components/Error404";
-import Nav from "./components/Nav";
-
 function App() {
-  // useEffect(() => {
-  //   props.dispatch(handleInitialData());
-  // }, [props.dispatch]);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(handleInitialData());
   }, [dispatch]);
-  // const { authedUser } = props;
   return (
     <Router>
       <div className="App">
@@ -65,43 +53,23 @@ function App() {
               </RequireAuth>
             }
           />
-          <Route
-            path="/404"
-            element={
-              <RequireAuth>
-                <Error404 />
-              </RequireAuth>
-            }
-          />
-
-          <Route path="*" element={<p>Path not resolved</p>} />
+          <Route path="/404" element={<Error404 />} />
+          <Route path="*" element={<Navigate to="/404" />} />
         </Routes>
       </div>
     </Router>
   );
 }
-function RequireAuth({ props, children, loggedIn }) {
-  // const authed = useSelector((state) => state.authedUser);
-  // const location = useLocation();
-  // const navigate = useNavigate();
-  // return authed === null ? (
-  //   <Navigate to="/" replace state={{ path: location.pathname }} />
-  // ) : (
-  //   // navigate("/")
-  //   children
-  // );
+function RequireAuth({ children }) {
   const authed = useSelector((state) => state.authedUser);
-  const location = useLocation();
-  const navigate = useNavigate();
+  const loggedIn = !!authed;
+  const redirectUrl = window.location.href
+    .toString()
+    .split(window.location.host)[1];
 
-  useEffect(() => {
-    if (authed === null) {
-      navigate("/", { replace: true, state: { path: location.pathname } });
-    }
-  }, [authed, navigate, location]);
-
-  return authed === null ? null : children;
+  return loggedIn ? children : <Navigate to={`/?redirectTo=${redirectUrl}`} />;
 }
+
 const mapStateToProps = ({ authedUser }) => ({
   loggedIn: !!authedUser,
 });

@@ -2,14 +2,17 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { handleLogin } from "../actions/authedUser";
 import { connect } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 function Login({ dispatch, loggedIn }) {
   const navigate = useNavigate();
   const [username, setUsername] = useState("sarahedo");
   const [password, setPassword] = useState("password123");
   console.log(loggedIn);
+  const location = useLocation();
   if (loggedIn) {
-    return navigate("/Dashboard");
+    const searchParams = new URLSearchParams(location.search);
+    const redirectTo = searchParams.get("redirectTo");
+    return <Navigate to={redirectTo ? redirectTo : "/Dashboard"} />;
   }
   const handleUsername = (e) => {
     const value = e.target.value;
@@ -93,10 +96,8 @@ function Login({ dispatch, loggedIn }) {
   );
 }
 
-function mapStateToProps({ authedUser }) {
-  return {
-    loggedIn: authedUser !== null,
-  };
-}
+const mapStateToProps = ({ authedUser }) => ({
+  loggedIn: !!authedUser,
+});
 
 export default connect(mapStateToProps)(Login);
